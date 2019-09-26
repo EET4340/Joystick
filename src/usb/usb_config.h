@@ -24,7 +24,7 @@ please contact mla_licensing@microchip.com
 #ifndef USBCFG_H
 #define USBCFG_H
 
-#include <usb_ch9.h>
+#include "usb_ch9.h"
 
 /** DEFINITIONS ****************************************************/
 #define USB_EP0_BUFF_SIZE		8	// Valid Options: 8, 16, 32, or 64 bytes.

@@ -24,7 +24,7 @@ please contact mla_licensing@microchip.com
 // *****************************************************************************
 #include "stdint.h"
 #include "system.h"
-#include "usb_device.h"
+#include "usb/usb_device.h"
 
 
 // *****************************************************************************

@@ -20,8 +20,8 @@ please contact mla_licensing@microchip.com
 /** INCLUDES *******************************************************/
 #include "system.h"
 
-#include "usb.h"
-#include "usb_device_hid.h"
+#include "usb/usb.h"
+#include "usb/usb_device_hid.h"
 
 #include "app_device_joystick.h"
 #include "app_led_usb_status.h"

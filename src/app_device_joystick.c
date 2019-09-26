@@ -21,8 +21,8 @@ please contact mla_licensing@microchip.com
 #define USBJOYSTICK_C
 
 /** INCLUDES *******************************************************/
-#include "usb.h"
-#include "usb_device_hid.h"
+#include "usb/usb.h"
+#include "usb/usb_device_hid.h"
 
 #include "system.h"
 

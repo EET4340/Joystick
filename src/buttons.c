@@ -22,7 +22,7 @@
 
 #include <xc.h>
 #include <stdbool.h>
-#include <buttons.h>
+#include "buttons.h"
 
 /*** Button Definitions *********************************************/
 //      S1       MCLR reset

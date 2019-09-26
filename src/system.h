@@ -25,7 +25,7 @@ please contact mla_licensing@microchip.com
 
 #include "buttons.h"
 #include "leds.h"
-#include "usb.h"
+#include "usb/usb.h"
 
 #include "io_mapping.h"
 

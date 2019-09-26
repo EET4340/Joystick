@@ -18,13 +18,13 @@ please contact mla_licensing@microchip.com
 *******************************************************************************/
 
 /** INCLUDES *******************************************************/
-#include "system.h"
+#include "../system.h"
 
 #include "usb.h"
 #include "usb_device_hid.h"
 
-#include "app_device_joystick.h"
-#include "app_led_usb_status.h"
+#include "../app_device_joystick.h"
+#include "../app_led_usb_status.h"
 
 /*******************************************************************
  * Function:        bool USER_USB_CALLBACK_EVENT_HANDLER(

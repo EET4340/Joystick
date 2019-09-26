@@ -20,7 +20,7 @@
  CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
  *******************************************************************/
 
-#include <leds.h>
+#include "leds.h"
 #include <stdbool.h>
 #include <xc.h>
 
@@ -66,27 +66,7 @@
 ********************************************************************/
 void LED_On(LED led)
 {
-    switch(led)
-    {
-        case LED_D1:
-            LED_D1_LAT = LED_ON;
-            break;
-
-        case LED_D2:
-            LED_D2_LAT = LED_ON;
-            break;
-			
-        case LED_D3:
-            LED_D3_LAT = LED_ON;
-            break;
-			
-        case LED_D4:
-            LED_D4_LAT = LED_ON;
-            break;
-
-        case LED_NONE:
-            break;
-    }
+    
 }
 
 /*********************************************************************
@@ -107,27 +87,7 @@ void LED_On(LED led)
 ********************************************************************/
 void LED_Off(LED led)
 {
-    switch(led)
-    {
-        case LED_D1:
-            LED_D1_LAT = LED_OFF;
-            break;
-
-        case LED_D2:
-            LED_D2_LAT = LED_OFF;
-            break;
-			
-        case LED_D3:
-            LED_D3_LAT = LED_OFF;
-            break;
-			
-        case LED_D4:
-            LED_D4_LAT = LED_OFF;
-            break;
-
-        case LED_NONE:
-            break;
-    }
+    
 }
 
 /*********************************************************************
@@ -148,27 +108,7 @@ void LED_Off(LED led)
 ********************************************************************/
 void LED_Toggle(LED led)
 {
-    switch(led)
-    {
-        case LED_D1:
-            LED_D1_LAT ^= 1;
-            break;
-
-        case LED_D2:
-            LED_D2_LAT ^= 1;
-            break;
-			
-        case LED_D3:
-            LED_D3_LAT ^= 1;
-            break;
-			
-        case LED_D4:
-            LED_D4_LAT ^= 1;
-            break;
-
-        case LED_NONE:
-            break;
-    }
+    
 }
 
 /*********************************************************************
@@ -188,25 +128,7 @@ void LED_Toggle(LED led)
 *
 ********************************************************************/
 bool LED_Get(LED led)
-{
-    switch(led)
-    {
-        case LED_D1:
-            return ( (LED_D1_LAT == LED_ON) ? true : false );
-
-        case LED_D2:
-            return ( (LED_D2_LAT == LED_ON) ? true : false );
-			
-        case LED_D3:
-            return ( (LED_D3_LAT == LED_ON) ? true : false );
-			
-        case LED_D4:
-            return ( (LED_D4_LAT == LED_ON) ? true : false );
-
-        case LED_NONE:
-            return false;
-    }
-    
+{   
     return false;
 }
 
@@ -227,29 +149,5 @@ bool LED_Get(LED led)
 ********************************************************************/
 void LED_Enable(LED led)
 {
-    switch(led)
-    {
-        case LED_D1:
-            LED_D1_TRIS = PIN_OUTPUT;
-            LED_D1_ANSEL = PIN_DIGITAL;
-            break;
-
-        case LED_D2:
-            LED_D2_TRIS = PIN_OUTPUT;
-            LED_D1_ANSEL = PIN_DIGITAL;
-            break;
-			
-        case LED_D3:
-            LED_D3_TRIS = PIN_OUTPUT;
-            LED_D1_ANSEL = PIN_DIGITAL;
-            break;
-			
-        case LED_D4:
-            LED_D4_TRIS = PIN_OUTPUT;
-            LED_D1_ANSEL = PIN_DIGITAL;
-            break;
-
-        case LED_NONE:
-            break;
-    }
+    
 }
