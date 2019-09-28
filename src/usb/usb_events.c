@@ -24,7 +24,6 @@ please contact mla_licensing@microchip.com
 #include "usb_device_hid.h"
 
 #include "../app_device_joystick.h"
-#include "../app_led_usb_status.h"
 
 /*******************************************************************
  * Function:        bool USER_USB_CALLBACK_EVENT_HANDLER(
@@ -57,13 +56,9 @@ bool USER_USB_CALLBACK_EVENT_HANDLER(USB_EVENT event, void *pdata, uint16_t size
         case EVENT_SOF:
             /* We are using the SOF as a timer to time the LED indicator.  Call
              * the LED update function here. */
-            APP_LEDUpdateUSBStatus();
             break;
 
         case EVENT_SUSPEND:
-            /* Update the LED status for the suspend event. */
-            APP_LEDUpdateUSBStatus();
-
             //Call the hardware platform specific handler for suspend events for
             //possible further action (like optionally going reconfiguring the application
             //for lower power states and going to sleep during the suspend event).  This
@@ -74,9 +69,6 @@ bool USER_USB_CALLBACK_EVENT_HANDLER(USB_EVENT event, void *pdata, uint16_t size
             break;
 
         case EVENT_RESUME:
-            /* Update the LED status for the resume event. */
-            APP_LEDUpdateUSBStatus();
-
             //Call the hardware platform specific resume from suspend handler (ex: to
             //restore I/O pins to higher power states if they were changed during the 
             //preceding SYSTEM_Initialize(SYSTEM_STATE_USB_SUSPEND) call at the start

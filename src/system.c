@@ -92,9 +92,6 @@ void SYSTEM_Initialize( SYSTEM_STATE state )
                 ACTCON = 0x90;  //Enable active clock tuning for USB operation
             #endif
 			
-            LED_Enable(LED_USB_DEVICE_STATE);
-            
-            BUTTON_Enable(BUTTON_USB_DEVICE_HID_JOYSTICK);
             break;
 			
         case SYSTEM_STATE_USB_SUSPEND: 

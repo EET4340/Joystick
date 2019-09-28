@@ -15,7 +15,7 @@ limitations under the License.
 
 To request to license the code under the MLA license (www.microchip.com/mla_license), 
 please contact mla_licensing@microchip.com
-*******************************************************************************/
+ *******************************************************************************/
 
 #ifndef USBJOYSTICK_C
 #define USBJOYSTICK_C
@@ -25,8 +25,6 @@ please contact mla_licensing@microchip.com
 #include "usb/usb_device_hid.h"
 
 #include "system.h"
-
-#include "app_led_usb_status.h"
 
 #include "stdint.h"
 
@@ -43,34 +41,35 @@ please contact mla_licensing@microchip.com
 #define HAT_SWITCH_NULL             0x8
 
 /** TYPE DEFINITIONS ************************************************/
-typedef union _INTPUT_CONTROLS_TYPEDEF
-{
-    struct
-    {
-        struct
-        {
-            uint8_t square:1;
-            uint8_t x:1;
-            uint8_t o:1;
-            uint8_t triangle:1;
-            uint8_t L1:1;
-            uint8_t R1:1;
-            uint8_t L2:1;
-            uint8_t R2:1;//
-            uint8_t select:1;
-            uint8_t start:1;
-            uint8_t left_stick:1;
-            uint8_t right_stick:1;
-            uint8_t home:1;
-            uint8_t :3;    //filler
+typedef union _INTPUT_CONTROLS_TYPEDEF {
+
+    struct {
+
+        struct {
+            uint8_t square : 1;
+            uint8_t x : 1;
+            uint8_t o : 1;
+            uint8_t triangle : 1;
+            uint8_t L1 : 1;
+            uint8_t R1 : 1;
+            uint8_t L2 : 1;
+            uint8_t R2 : 1; //
+            uint8_t select : 1;
+            uint8_t start : 1;
+            uint8_t left_stick : 1;
+            uint8_t right_stick : 1;
+            uint8_t home : 1;
+uint8_t:
+            3; //filler
         } buttons;
-        struct
-        {
-            uint8_t hat_switch:4;
-            uint8_t :4;//filler
+
+        struct {
+            uint8_t hat_switch : 4;
+uint8_t:
+            4; //filler
         } hat_switch;
-        struct
-        {
+
+        struct {
             uint8_t X;
             uint8_t Y;
             uint8_t Z;
@@ -88,64 +87,60 @@ typedef union _INTPUT_CONTROLS_TYPEDEF
  * specific areas.
  */
 #if defined(FIXED_ADDRESS_MEMORY)
-    #if defined(COMPILER_MPLAB_C18)
-        #pragma udata JOYSTICK_DATA=JOYSTICK_DATA_ADDRESS
-            INPUT_CONTROLS joystick_input;
-        #pragma udata
-    #elif defined(__XC8)
-        INPUT_CONTROLS joystick_input JOYSTICK_DATA_ADDRESS;
-    #endif
+#if defined(COMPILER_MPLAB_C18)
+#pragma udata JOYSTICK_DATA=JOYSTICK_DATA_ADDRESS
+INPUT_CONTROLS joystick_input;
+#pragma udata
+#elif defined(__XC8)
+INPUT_CONTROLS joystick_input JOYSTICK_DATA_ADDRESS;
+#endif
 #else
-    INPUT_CONTROLS joystick_input;
+INPUT_CONTROLS joystick_input;
 #endif
 
 
 USB_VOLATILE USB_HANDLE lastTransmission = 0;
 
-
 /*********************************************************************
-* Function: void APP_DeviceJoystickInitialize(void);
-*
-* Overview: Initializes the demo code
-*
-* PreCondition: None
-*
-* Input: None
-*
-* Output: None
-*
-********************************************************************/
-void APP_DeviceJoystickInitialize(void)
-{  
+ * Function: void APP_DeviceJoystickInitialize(void);
+ *
+ * Overview: Initializes the demo code
+ *
+ * PreCondition: None
+ *
+ * Input: None
+ *
+ * Output: None
+ *
+ ********************************************************************/
+void APP_DeviceJoystickInitialize(void) {
     //initialize the variable holding the handle for the last
     // transmission
     lastTransmission = 0;
 
     //enable the HID endpoint
-    USBEnableEndpoint(JOYSTICK_EP,USB_IN_ENABLED|USB_HANDSHAKE_ENABLED|USB_DISALLOW_SETUP);
+    USBEnableEndpoint(JOYSTICK_EP, USB_IN_ENABLED | USB_HANDSHAKE_ENABLED | USB_DISALLOW_SETUP);
 }//end UserInit
 
 /*********************************************************************
-* Function: void APP_DeviceJoystickTasks(void);
-*
-* Overview: Keeps the demo running.
-*
-* PreCondition: The demo should have been initialized and started via
-*   the APP_DeviceJoystickInitialize() and APP_DeviceJoystickStart() demos
-*   respectively.
-*
-* Input: None
-*
-* Output: None
-*
-********************************************************************/
-void APP_DeviceJoystickTasks(void)
-{  
+ * Function: void APP_DeviceJoystickTasks(void);
+ *
+ * Overview: Keeps the demo running.
+ *
+ * PreCondition: The demo should have been initialized and started via
+ *   the APP_DeviceJoystickInitialize() and APP_DeviceJoystickStart() demos
+ *   respectively.
+ *
+ * Input: None
+ *
+ * Output: None
+ *
+ ********************************************************************/
+void APP_DeviceJoystickTasks(void) {
     /* If the USB device isn't configured yet, we can't really do anything
      * else since we don't have a host to talk to.  So jump back to the
      * top of the while loop. */
-    if( USBGetDeviceState() < CONFIGURED_STATE )
-    {
+    if (USBGetDeviceState() < CONFIGURED_STATE) {
         /* Jump back to the top of the while loop. */
         return;
     }
@@ -154,67 +149,32 @@ void APP_DeviceJoystickTasks(void)
      * issue a remote wakeup.  In either case, we shouldn't process any
      * keyboard commands since we aren't currently communicating to the host
      * thus just continue back to the start of the while loop. */
-    if( USBIsDeviceSuspended() == true )
-    {
+    if (USBIsDeviceSuspended() == true) {
         /* Jump back to the top of the while loop. */
         return;
     }
 
     //If the last transmission is complete
-    if(!HIDTxHandleBusy(lastTransmission))
-    {
-        //If the button is pressed
-        if(BUTTON_IsPressed(BUTTON_USB_DEVICE_HID_JOYSTICK) == true)
-        {
-            //Indicate that the "x" button is pressed, but none others
-            joystick_input.members.buttons.x = 1;
-            joystick_input.members.buttons.square = 0;
-            joystick_input.members.buttons.o = 0;
-            joystick_input.members.buttons.triangle = 0;
-            joystick_input.members.buttons.L1 = 0;
-            joystick_input.members.buttons.R1 = 0;
-            joystick_input.members.buttons.L2 = 0;
-            joystick_input.members.buttons.R2 = 0;
-            joystick_input.members.buttons.select = 0;
-            joystick_input.members.buttons.start = 0;
-            joystick_input.members.buttons.left_stick = 0;
-            joystick_input.members.buttons.right_stick = 0;
-            joystick_input.members.buttons.home = 0;
+    if (!HIDTxHandleBusy(lastTransmission)) {
+        //Reset values of the controller to default state
 
-            //Move the hat switch to the "east" position
-            joystick_input.members.hat_switch.hat_switch = HAT_SWITCH_EAST;
+        //Buttons
+        joystick_input.val[0] = 0x00;
+        joystick_input.val[1] = 0x00;
 
-            //Move the X and Y coordinates to the their extreme values (0x80 is
-            //  in the middle - no value).
-            joystick_input.members.analog_stick.X = 0;
-            joystick_input.members.analog_stick.Y = 0;
+        //Hat switch
+        joystick_input.val[2] = 0x08;
 
-            //Send the packet over USB to the host.
-            lastTransmission = HIDTxPacket(JOYSTICK_EP, (uint8_t*)&joystick_input, sizeof(joystick_input));
+        //Analog sticks
+        joystick_input.val[3] = 0x80;
+        joystick_input.val[4] = 0x80;
+        joystick_input.val[5] = 0x80;
+        joystick_input.val[6] = 0x80;
 
-        }
-        else
-        {
-            //Reset values of the controller to default state
-
-            //Buttons
-            joystick_input.val[0] = 0x00;
-            joystick_input.val[1] = 0x00;
-
-            //Hat switch
-            joystick_input.val[2] = 0x08;
-
-            //Analog sticks
-            joystick_input.val[3] = 0x80;
-            joystick_input.val[4] = 0x80;
-            joystick_input.val[5] = 0x80;
-            joystick_input.val[6] = 0x80;
-
-            //Send the 8 byte packet over USB to the host.
-            lastTransmission = HIDTxPacket(JOYSTICK_EP, (uint8_t*)&joystick_input, sizeof(joystick_input));
-        }
+        //Send the 8 byte packet over USB to the host.
+        lastTransmission = HIDTxPacket(JOYSTICK_EP, (uint8_t*) & joystick_input, sizeof (joystick_input));
     }
-    
+
 }//end ProcessIO
 
 #endif

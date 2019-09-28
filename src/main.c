@@ -24,9 +24,6 @@ please contact mla_licensing@microchip.com
 #include "usb/usb_device_hid.h"
 
 #include "app_device_joystick.h"
-#include "app_led_usb_status.h"
-
-
 
 MAIN_RETURN main(void)
 {

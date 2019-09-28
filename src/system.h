@@ -23,15 +23,12 @@ please contact mla_licensing@microchip.com
 #include <xc.h>
 #include <stdbool.h>
 
-#include "buttons.h"
-#include "leds.h"
 #include "usb/usb.h"
-
-#include "io_mapping.h"
 
 #include "fixed_address_memory.h"
 
 #define MAIN_RETURN void
+#define self_power                              1
 
 /*** System States **************************************************/
 typedef enum
