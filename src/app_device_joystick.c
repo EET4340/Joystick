@@ -28,55 +28,20 @@ please contact mla_licensing@microchip.com
 
 #include "stdint.h"
 
-/** DECLARATIONS ***************************************************/
-//http://www.microsoft.com/whdc/archive/hidgame.mspx
-#define HAT_SWITCH_NORTH            0x0
-#define HAT_SWITCH_NORTH_EAST       0x1
-#define HAT_SWITCH_EAST             0x2
-#define HAT_SWITCH_SOUTH_EAST       0x3
-#define HAT_SWITCH_SOUTH            0x4
-#define HAT_SWITCH_SOUTH_WEST       0x5
-#define HAT_SWITCH_WEST             0x6
-#define HAT_SWITCH_NORTH_WEST       0x7
-#define HAT_SWITCH_NULL             0x8
-
 /** TYPE DEFINITIONS ************************************************/
 typedef union _INTPUT_CONTROLS_TYPEDEF {
-
     struct {
-
-        struct {
-            uint8_t square : 1;
-            uint8_t x : 1;
-            uint8_t o : 1;
-            uint8_t triangle : 1;
-            uint8_t L1 : 1;
-            uint8_t R1 : 1;
-            uint8_t L2 : 1;
-            uint8_t R2 : 1; //
-            uint8_t select : 1;
-            uint8_t start : 1;
-            uint8_t left_stick : 1;
-            uint8_t right_stick : 1;
-            uint8_t home : 1;
-uint8_t:
-            3; //filler
-        } buttons;
-
-        struct {
-            uint8_t hat_switch : 4;
-uint8_t:
-            4; //filler
-        } hat_switch;
-
-        struct {
-            uint8_t X;
-            uint8_t Y;
-            uint8_t Z;
-            uint8_t Rz;
-        } analog_stick;
-    } members;
-    uint8_t val[7];
+        uint8_t throttle;
+        uint8_t X;
+        uint8_t Y;
+        uint8_t button0 : 1;
+        uint8_t button1 : 1;
+        uint8_t button2 : 1;
+        uint8_t button3 : 1;
+        uint8_t filler : 4;
+        
+    };
+    uint8_t bytes[4];
 } INPUT_CONTROLS;
 
 
@@ -120,6 +85,11 @@ void APP_DeviceJoystickInitialize(void) {
 
     //enable the HID endpoint
     USBEnableEndpoint(JOYSTICK_EP, USB_IN_ENABLED | USB_HANDSHAKE_ENABLED | USB_DISALLOW_SETUP);
+    //Setup pins
+    ANSELBbits.ANSB5 = 0;
+    TRISBbits.RB5 = 1;
+    WPUBbits.WPUB5 = 1;
+    INTCON2bits.RBPU = 0;
 }//end UserInit
 
 /*********************************************************************
@@ -159,18 +129,17 @@ void APP_DeviceJoystickTasks(void) {
         //Reset values of the controller to default state
 
         //Buttons
-        joystick_input.val[0] = 0x00;
-        joystick_input.val[1] = 0x00;
-
-        //Hat switch
-        joystick_input.val[2] = 0x08;
-
-        //Analog sticks
-        joystick_input.val[3] = 0x80;
-        joystick_input.val[4] = 0x80;
-        joystick_input.val[5] = 0x80;
-        joystick_input.val[6] = 0x80;
-
+        if (PORTBbits.RB5 == 0) {
+            joystick_input.button0 = 1;
+        } else {
+            joystick_input.button0 = 0;
+        }
+        joystick_input.button1 = 0;
+        joystick_input.button2 = 0;
+        joystick_input.button3 = 0;
+        joystick_input.X = 0;
+        joystick_input.Y = 127;
+        joystick_input.throttle = -100;
         //Send the 8 byte packet over USB to the host.
         lastTransmission = HIDTxPacket(JOYSTICK_EP, (uint8_t*) & joystick_input, sizeof (joystick_input));
     }
