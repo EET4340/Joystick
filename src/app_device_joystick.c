@@ -30,8 +30,8 @@ please contact mla_licensing@microchip.com
 typedef union _INTPUT_CONTROLS_TYPEDEF {
     struct {
         uint8_t throttle;
-        uint8_t X;
-        uint8_t Y;
+        uint16_t X;
+        uint16_t Y;
         uint8_t button0 : 1;
         uint8_t button1 : 1;
         uint8_t button2 : 1;
@@ -39,7 +39,7 @@ typedef union _INTPUT_CONTROLS_TYPEDEF {
         uint8_t filler : 4;
         
     };
-    uint8_t bytes[4];
+    uint8_t bytes[6];
 } INPUT_CONTROLS;
 
 
@@ -62,6 +62,8 @@ INPUT_CONTROLS joystick_input;
 #endif
 
 
+unsigned int readAnalogInput(int channel);
+
 USB_VOLATILE USB_HANDLE lastTransmission = 0;
 
 /*********************************************************************
@@ -83,11 +85,22 @@ void APP_DeviceJoystickInitialize(void) {
 
     //enable the HID endpoint
     USBEnableEndpoint(JOYSTICK_EP, USB_IN_ENABLED | USB_HANDSHAKE_ENABLED | USB_DISALLOW_SETUP);
-    //Setup pins
+    //Setup digital pins for buttons
     ANSELBbits.ANSB5 = 0;
     TRISBbits.RB5 = 1;
     WPUBbits.WPUB5 = 1;
     INTCON2bits.RBPU = 0;
+    //setup analog pins for pots
+    ANSELAbits.ANSA0 = 1;
+    ANSELAbits.ANSA1 = 1;
+    TRISAbits.RA0 = 1;
+    TRISAbits.RA1 = 1;
+    //setup ADC
+    ADCON2bits.ADFM = 1; //Right justify
+    ADCON2bits.ADCS = 0b110; //Fosc / 64 = ~1.3us
+    ADCON2bits.ACQT = 0b100; //6 TAD = ~7.8us
+    ADCON0bits.CHS = 0;
+    ADCON0bits.ADON = 1;
 }//end UserInit
 
 /*********************************************************************
@@ -133,13 +146,27 @@ void APP_DeviceJoystickTasks(void) {
         joystick_input.button1 = 0;
         joystick_input.button2 = 0;
         joystick_input.button3 = 0;
-        joystick_input.X = 0;
-        joystick_input.Y = 127;
-        joystick_input.throttle = -100;
+        int position;
+        position = readAnalogInput(0);
+        joystick_input.X = position - 512;
+        joystick_input.Y = 0;
+        position = readAnalogInput(1);
+        position /= 4;
+        position -= 128;
+        if (position == -128) {
+            position = -127;
+        }
+        joystick_input.throttle = position;
         //Send the packet over USB to the host.
         lastTransmission = HIDTxPacket(JOYSTICK_EP, (uint8_t*) & joystick_input, sizeof (joystick_input));
     }
 
 }//end ProcessIO
 
+unsigned int readAnalogInput(int channel) {
+    ADCON0bits.CHS = channel & 0x1f;
+    ADCON0bits.GO = 1;
+    while (ADCON0bits.GO == 1);
+    return *(unsigned int *)&ADRESL;
+}
 #endif

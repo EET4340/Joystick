@@ -240,7 +240,7 @@ const uint8_t *const USB_SD_Ptr[]=
 };
 
 const struct{uint8_t report[HID_RPT01_SIZE];}hid_rpt01={{
-  0x05, 0x01,                    // USAGE_PAGE (Generic Desktop)
+    0x05, 0x01,                    // USAGE_PAGE (Generic Desktop)
     0x15, 0x00,                    // LOGICAL_MINIMUM (0)
     0x09, 0x04,                    // USAGE (Joystick)
     0xa1, 0x01,                    // COLLECTION (Application)
@@ -256,6 +256,7 @@ const struct{uint8_t report[HID_RPT01_SIZE];}hid_rpt01={{
     0xa1, 0x00,                    //   COLLECTION (Physical)
     0x09, 0x30,                    //     USAGE (X)
     0x09, 0x31,                    //     USAGE (Y)
+    0x75, 0x10,                    //     REPORT_SIZE (16)
     0x95, 0x02,                    //     REPORT_COUNT (2)
     0x81, 0x02,                    //     INPUT (Data,Var,Abs)
     0xc0,                          //   END_COLLECTION
@@ -267,8 +268,8 @@ const struct{uint8_t report[HID_RPT01_SIZE];}hid_rpt01={{
     0x75, 0x01,                    //   REPORT_SIZE (1)
     0x95, 0x04,                    //   REPORT_COUNT (4)
     0x81, 0x02,                    //   INPUT (Data,Var,Abs)
-    0x95, 0x04,                    // REPORT_COUNT (4)
-    0x81, 0x01,                    // INPUT (Cnst,Ary,Abs)
+    0x95, 0x04,                    //   REPORT_COUNT (4)
+    0x81, 0x01,                    //   INPUT (Cnst,Ary,Abs)
     0xc0                           // END_COLLECTION
 }
 };
