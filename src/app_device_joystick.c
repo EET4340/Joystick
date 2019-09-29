@@ -23,9 +23,7 @@ please contact mla_licensing@microchip.com
 /** INCLUDES *******************************************************/
 #include "usb/usb.h"
 #include "usb/usb_device_hid.h"
-
 #include "system.h"
-
 #include "stdint.h"
 
 /** TYPE DEFINITIONS ************************************************/
@@ -126,9 +124,7 @@ void APP_DeviceJoystickTasks(void) {
 
     //If the last transmission is complete
     if (!HIDTxHandleBusy(lastTransmission)) {
-        //Reset values of the controller to default state
-
-        //Buttons
+        //update controls
         if (PORTBbits.RB5 == 0) {
             joystick_input.button0 = 1;
         } else {
@@ -140,7 +136,7 @@ void APP_DeviceJoystickTasks(void) {
         joystick_input.X = 0;
         joystick_input.Y = 127;
         joystick_input.throttle = -100;
-        //Send the 8 byte packet over USB to the host.
+        //Send the packet over USB to the host.
         lastTransmission = HIDTxPacket(JOYSTICK_EP, (uint8_t*) & joystick_input, sizeof (joystick_input));
     }
 

@@ -19,10 +19,8 @@ please contact mla_licensing@microchip.com
 
 /** INCLUDES *******************************************************/
 #include "system.h"
-
 #include "usb/usb.h"
 #include "usb/usb_device_hid.h"
-
 #include "app_device_joystick.h"
 
 MAIN_RETURN main(void)

@@ -77,8 +77,8 @@ please contact mla_licensing@microchip.com
 //(ex: USBDeviceTasks()) must be called periodically by the application firmware
 //at a minimum rate as described in the inline code comments in usb_device.c.
 //------------------------------------------------------
-#define USB_POLLING
-//#define USB_INTERRUPT
+//#define USB_POLLING
+#define USB_INTERRUPT
 //------------------------------------------------------------------------------
 
 /* Parameter definitions are defined in usb_device.h */
@@ -115,7 +115,7 @@ please contact mla_licensing@microchip.com
 //and it never uses host to device control transfers with data stage, then
 //it is not required to enable the USB_ENABLE_STATUS_STAGE_TIMEOUTS feature.
 
-#define USB_ENABLE_STATUS_STAGE_TIMEOUTS    //Comment this out to disable this feature.
+//#define USB_ENABLE_STATUS_STAGE_TIMEOUTS    //Comment this out to disable this feature.
 
 //Section 9.2.6 of the USB 2.0 specifications indicate that:
 //1.  Control transfers with no data stage: Status stage must complete within
@@ -167,6 +167,8 @@ please contact mla_licensing@microchip.com
 #define HID_INT_OUT_EP_SIZE     64
 #define HID_INT_IN_EP_SIZE      64
 #define HID_NUM_OF_DSC          1
+
+//Set this value based on the size of the HID descriptor
 #define HID_RPT01_SIZE          58
 
 /** DEFINITIONS ****************************************************/
