@@ -169,7 +169,7 @@ please contact mla_licensing@microchip.com
 #define HID_NUM_OF_DSC          1
 
 //Set this value based on the size of the HID descriptor
-#define HID_RPT01_SIZE          60
+#define HID_RPT01_SIZE          58
 
 /** DEFINITIONS ****************************************************/
 

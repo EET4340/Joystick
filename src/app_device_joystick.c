@@ -32,11 +32,14 @@ typedef union _INTPUT_CONTROLS_TYPEDEF {
         uint8_t throttle;
         uint16_t X;
         uint16_t Y;
-        uint8_t button0 : 1;
         uint8_t button1 : 1;
         uint8_t button2 : 1;
         uint8_t button3 : 1;
-        uint8_t filler : 4;
+        uint8_t button4 : 1;
+        uint8_t button5 : 1;
+        uint8_t button6 : 1;
+        uint8_t button7 : 1;
+        uint8_t button8 : 1;
         
     };
     uint8_t bytes[6];
@@ -86,9 +89,9 @@ void APP_DeviceJoystickInitialize(void) {
     //enable the HID endpoint
     USBEnableEndpoint(JOYSTICK_EP, USB_IN_ENABLED | USB_HANDSHAKE_ENABLED | USB_DISALLOW_SETUP);
     //Setup digital pins for buttons
-    ANSELBbits.ANSB5 = 0;
-    TRISBbits.RB5 = 1;
-    WPUBbits.WPUB5 = 1;
+    ANSELB = 0; // all port B digital
+    TRISB = 0xff;
+    WPUB = 0xff;
     INTCON2bits.RBPU = 0;
     //setup analog pins for pots
     ANSELAbits.ANSA0 = 1;
@@ -139,13 +142,13 @@ void APP_DeviceJoystickTasks(void) {
     if (!HIDTxHandleBusy(lastTransmission)) {
         //update controls
         if (PORTBbits.RB5 == 0) {
-            joystick_input.button0 = 1;
+            joystick_input.button1 = 1;
         } else {
-            joystick_input.button0 = 0;
+            joystick_input.button1 = 0;
         }
-        joystick_input.button1 = 0;
         joystick_input.button2 = 0;
         joystick_input.button3 = 0;
+        joystick_input.button4 = 0;
         int position;
         position = readAnalogInput(0);
         joystick_input.X = position - 512;

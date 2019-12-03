@@ -256,20 +256,19 @@ const struct{uint8_t report[HID_RPT01_SIZE];}hid_rpt01={{
     0xa1, 0x00,                    //   COLLECTION (Physical)
     0x09, 0x30,                    //     USAGE (X)
     0x09, 0x31,                    //     USAGE (Y)
-    0x75, 0x10,                    //     REPORT_SIZE (16)
     0x95, 0x02,                    //     REPORT_COUNT (2)
     0x81, 0x02,                    //     INPUT (Data,Var,Abs)
     0xc0,                          //   END_COLLECTION
     0x05, 0x09,                    //   USAGE_PAGE (Button)
     0x19, 0x01,                    //   USAGE_MINIMUM (Button 1)
-    0x29, 0x04,                    //   USAGE_MAXIMUM (Button 4)
+    0x29, 0x08,                    //   USAGE_MAXIMUM (Button 8)
     0x15, 0x00,                    //   LOGICAL_MINIMUM (0)
     0x25, 0x01,                    //   LOGICAL_MAXIMUM (1)
     0x75, 0x01,                    //   REPORT_SIZE (1)
-    0x95, 0x04,                    //   REPORT_COUNT (4)
+    0x95, 0x08,                    //   REPORT_COUNT (8)
+    0x55, 0x00,                    //   UNIT_EXPONENT (0)
+    0x65, 0x00,                    //   UNIT (None)
     0x81, 0x02,                    //   INPUT (Data,Var,Abs)
-    0x95, 0x04,                    //   REPORT_COUNT (4)
-    0x81, 0x01,                    //   INPUT (Cnst,Ary,Abs)
     0xc0                           // END_COLLECTION
 }
 };
